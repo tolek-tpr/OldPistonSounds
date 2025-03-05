@@ -1,9 +1,15 @@
 package pl.epsi;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import pl.epsi.settings.OldPistonSettings;
+
+import java.util.ArrayList;
 
 public class PistonCutoffManager {
 
@@ -16,42 +22,81 @@ public class PistonCutoffManager {
         return instance;
     }
 
-    public int threshold = 0;
-    public int timeSincePistonFireInTicks = 0;
-    public int timeSinceCutout = 0;
-    private boolean synced = false;
+    private final int PISTON_SOUND_THRESHOLD = 16;
+    private final int CUTOFF_TIME = 2; // GameTicks
+    private final OldPistonSettings settings = OldPistonSettings.getInstance();
+    private final ArrayList<Integer> timeSinceOverloadedTick = new ArrayList<>();
+    private final ArrayList<PistonSoundEvent> soundEvents = new ArrayList<>();
+    private final ArrayList<PistonSoundEvent> tempAddedInTick = new ArrayList<>();
 
     private MinecraftClient client = MinecraftClient.getInstance();
-    private final OldPistonSettings settings = OldPistonSettings.getInstance();
+
+    private int pistonsFiredInGameTick = 0;
+    private int ticksSinceLastPiston = 10;
+
+    public void increasePistonsFired() { this.pistonsFiredInGameTick++; }
+    public void resetTicksSinceLastPiston() { this.ticksSinceLastPiston = 0; }
 
     public void tick() {
-        if (this.client == null) client = MinecraftClient.getInstance();
-        if (this.client == null || !settings.cutoffPistons) return;
+        if (client == null) client = MinecraftClient.getInstance();
 
-        timeSincePistonFireInTicks++;
-        timeSinceCutout++;
-        if (timeSincePistonFireInTicks > 2000000000) timeSincePistonFireInTicks = 2;
-        if (timeSinceCutout > 2) timeSinceCutout = 0;
-
-        if (timeSincePistonFireInTicks < 2 && threshold >= 8 && timeSinceCutout > 1) {
-            this.client.getSoundManager().stopSounds(Identifier.of("block.piston.extend"), SoundCategory.BLOCKS);
-            this.client.getSoundManager().stopSounds(Identifier.of("block.piston.contract"), SoundCategory.BLOCKS);
+        if (pistonsFiredInGameTick > PISTON_SOUND_THRESHOLD) {
+            timeSinceOverloadedTick.add(0);
         } else {
-            synced = false;
+            tempAddedInTick.forEach(soundEvents::remove);
         }
+
+        if (ticksSinceLastPiston == 3 && client != null && client.player != null && client.player.getWorld() != null && settings.cutoffPistons) {
+            soundEvents.forEach(e -> {
+                if (e.ticksSince >= 3) e.playSound(client.player.getWorld(), client.player);
+            });
+
+            timeSinceOverloadedTick.clear();
+            soundEvents.clear();
+        }
+
+        for (int i = 0; i < timeSinceOverloadedTick.size(); i++) {
+            int tick = timeSinceOverloadedTick.get(i);
+
+            if (tick >= CUTOFF_TIME && client != null && settings.cutoffPistons && ticksSinceLastPiston != 3) {
+                client.getSoundManager().stopSounds(Identifier.of("block.piston.extend"), SoundCategory.BLOCKS);
+                client.getSoundManager().stopSounds(Identifier.of("block.piston.contract"), SoundCategory.BLOCKS);
+                timeSinceOverloadedTick.remove(i);
+            } else {
+                // Increment
+                timeSinceOverloadedTick.remove(i);
+                timeSinceOverloadedTick.add(i, ++tick);
+            }
+        }
+
+        pistonsFiredInGameTick = 0;
+        ticksSinceLastPiston++;
+        soundEvents.forEach(PistonSoundEvent::increment);
+        tempAddedInTick.clear();
     }
 
-    public void sync() {
-        if (this.client == null) client = MinecraftClient.getInstance();
-        if (this.client == null || this.synced || !settings.cutoffPistons) return;
+    public void addPistonSoundEvent(PistonSoundEvent e) {
+        this.soundEvents.add(e);
+        this.tempAddedInTick.add(e);
+    }
 
-        timeSinceCutout = 0;
-        this.synced = true;
+    public static class PistonSoundEvent {
 
-        if (timeSincePistonFireInTicks < 2 && threshold >= 8) {
-            this.client.getSoundManager().stopSounds(Identifier.of("block.piston.extend"), SoundCategory.BLOCKS);
-            this.client.getSoundManager().stopSounds(Identifier.of("block.piston.contract"), SoundCategory.BLOCKS);
+        private final BlockPos pos;
+        private int ticksSince;
+
+        public PistonSoundEvent(BlockPos pos) {
+            this.pos = pos;
+            this.ticksSince = 0;
         }
+
+        public void increment() { this.ticksSince++; }
+
+        public void playSound(World w, PlayerEntity player) {
+            w.playSound(player, this.pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.45F,
+                0.635F + w.random.nextFloat() * 0.20F);
+        }
+
     }
 
 }

@@ -37,9 +37,9 @@ public class PistonBlockMixin {
 		}
 		if (manager == null) original.call(instance, source, pos, sound, category, volume, pitch);
 
-		manager.threshold++;
-		manager.timeSincePistonFireInTicks = 0;
-		manager.sync();
+		manager.increasePistonsFired();
+		manager.resetTicksSinceLastPiston();
+
 		if (settings.modifyPistonPitch) {
 			instance.playSound((Entity) null, pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.9F,
 					0.635F + instance.random.nextFloat() * 0.20F);
@@ -58,11 +58,13 @@ public class PistonBlockMixin {
 			OldPistonSounds.LOGGER.warn("Old Piston Sound Manager is null!");
 			manager = PistonCutoffManager.getInstance();
 		}
+
 		if (manager == null) original.call(instance, source, pos, sound, category, volume, pitch);
 
-		manager.threshold++;
-		manager.timeSincePistonFireInTicks = 0;
-		manager.sync();
+		manager.increasePistonsFired();
+		manager.resetTicksSinceLastPiston();
+		manager.addPistonSoundEvent(new PistonCutoffManager.PistonSoundEvent(pos));
+
 		if (settings.modifyPistonPitch) {
 			instance.playSound((Entity) null, pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.9F,
 					0.635F + instance.random.nextFloat() * 0.20F);

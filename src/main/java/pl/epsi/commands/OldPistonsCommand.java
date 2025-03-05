@@ -1,8 +1,10 @@
 package pl.epsi.commands;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 import pl.epsi.settings.OldPistonSettings;
 
@@ -18,19 +20,37 @@ public class OldPistonsCommand implements ClientModInitializer {
             dispatcher.register(literal("oldpistons")
                     .then(literal("cutoffPistons")
                             .then(argument("On/Off", BoolArgumentType.bool())
-                                    .executes(ctx -> {
-                settings.cutoffPistons = BoolArgumentType.getBool(ctx, "On/Off");
-                ctx.getSource().sendFeedback(Text.literal("Set Cutoff Pistons to " + BoolArgumentType.getBool(ctx, "On/Off")));
-                return 1;
-            }))).then(literal("changePistonPitch")
+                                    .executes(ctx -> cutoffPistonsCommand(ctx, true)))
+                            .executes(ctx -> cutoffPistonsCommand(ctx, false)))
+                    .then(literal("changePistonPitch")
                             .then(argument("On/Off", BoolArgumentType.bool())
-                                    .executes(ctx -> {
-                                        settings.modifyPistonPitch = BoolArgumentType.getBool(ctx, "On/Off");
-                                        ctx.getSource().sendFeedback(Text.literal("Set Change Piston Pitch to " + BoolArgumentType.getBool(ctx, "On/Off")));
-                                        return 1;
-            }))));
+                                    .executes(ctx -> changePistonPitchCommand(ctx, true)))
+                            .executes(ctx -> changePistonPitchCommand(ctx, false)))
+            );
 
         });
+    }
+
+    public int cutoffPistonsCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
+        if (bl) {
+            settings.cutoffPistons = BoolArgumentType.getBool(ctx, "On/Off");
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffPistonsCommand.set", settings.cutoffPistons));
+        } else {
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffPistonsCommand.get", settings.cutoffPistons));
+        }
+
+        return 1;
+    }
+
+    public int changePistonPitchCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
+        if (bl) {
+            settings.modifyPistonPitch = BoolArgumentType.getBool(ctx, "On/Off");
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.changePistonPitchCommand.set", settings.modifyPistonPitch));
+        } else {
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.changePistonPitchCommand.get", settings.modifyPistonPitch));
+        }
+
+        return 1;
     }
 
 }
