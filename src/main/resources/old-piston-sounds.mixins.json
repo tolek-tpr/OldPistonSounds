@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "pl.epsi.mixin",
+	"compatibilityLevel": "JAVA_21",
+	"mixins": [
+		"PistonBlockMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	},
+	"client": [
+		"MinecraftClientMixin"
+	]
+}

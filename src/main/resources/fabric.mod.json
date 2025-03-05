@@ -1,0 +1,31 @@
+{
+	"schemaVersion": 1,
+	"id": "old-piston-sounds",
+	"version": "${version}",
+	"name": "Old Piston Sounds",
+	"description": "Old. Piston. Sounds.",
+	"authors": [
+		"bear_with_me_XD"
+	],
+	"contact": {},
+	"license": "CC0-1.0",
+	"icon": "assets/old-piston-sounds/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"pl.epsi.OldPistonSounds"
+		],
+		"client": [
+			"pl.epsi.commands.OldPistonsCommand"
+		]
+	},
+	"mixins": [
+		"old-piston-sounds.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.9",
+		"minecraft": "~1.21",
+		"java": ">=21",
+		"fabric-api": "*"
+	}
+}
