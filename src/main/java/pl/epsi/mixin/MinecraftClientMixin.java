@@ -6,14 +6,14 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import pl.epsi.PistonSoundManager;
+import pl.epsi.PistonCutoffManager;
 import pl.epsi.settings.FileLoader;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
 
     @Unique
-    private final PistonSoundManager soundManager = PistonSoundManager.getInstance();
+    private final PistonCutoffManager soundManager = PistonCutoffManager.getInstance();
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void tick(CallbackInfo ci) {

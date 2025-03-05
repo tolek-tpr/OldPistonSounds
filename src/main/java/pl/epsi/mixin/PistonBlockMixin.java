@@ -15,13 +15,13 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import pl.epsi.settings.OldPistonSettings;
 import pl.epsi.OldPistonSounds;
-import pl.epsi.PistonSoundManager;
+import pl.epsi.PistonCutoffManager;
 
 @Mixin(PistonBlock.class)
 public class PistonBlockMixin {
 
 	@Unique
-	private PistonSoundManager manager = PistonSoundManager.getInstance();
+	private PistonCutoffManager manager = PistonCutoffManager.getInstance();
 	@Unique
 	private final OldPistonSettings settings = OldPistonSettings.getInstance();
 
@@ -33,7 +33,7 @@ public class PistonBlockMixin {
 									   float volume, float pitch, Operation<Void> original) {
 		if (manager == null) {
 			OldPistonSounds.LOGGER.warn("Old Piston Sound Manager is null!");
-			manager = PistonSoundManager.getInstance();
+			manager = PistonCutoffManager.getInstance();
 		}
 		if (manager == null) original.call(instance, source, pos, sound, category, volume, pitch);
 
@@ -56,7 +56,7 @@ public class PistonBlockMixin {
 									   float volume, float pitch, Operation<Void> original) {
 		if (manager == null) {
 			OldPistonSounds.LOGGER.warn("Old Piston Sound Manager is null!");
-			manager = PistonSoundManager.getInstance();
+			manager = PistonCutoffManager.getInstance();
 		}
 		if (manager == null) original.call(instance, source, pos, sound, category, volume, pitch);
 

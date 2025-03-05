@@ -5,14 +5,14 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import pl.epsi.settings.OldPistonSettings;
 
-public class PistonSoundManager {
+public class PistonCutoffManager {
 
-    private static PistonSoundManager instance;
+    private static PistonCutoffManager instance;
 
-    private PistonSoundManager() {}
+    private PistonCutoffManager() {}
 
-    public static PistonSoundManager getInstance() {
-        if (instance == null) instance = new PistonSoundManager();
+    public static PistonCutoffManager getInstance() {
+        if (instance == null) instance = new PistonCutoffManager();
         return instance;
     }
 
