@@ -4,6 +4,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -22,7 +23,7 @@ public class PistonCutoffManager {
         return instance;
     }
 
-    private final int PISTON_SOUND_THRESHOLD = 16;
+    private final int PISTON_SOUND_THRESHOLD = 32;
     private final int CUTOFF_TIME = 2; // GameTicks
     private final OldPistonSettings settings = OldPistonSettings.getInstance();
     private final ArrayList<Integer> timeSinceOverloadedTick = new ArrayList<>();
@@ -47,9 +48,13 @@ public class PistonCutoffManager {
         }
 
         if (ticksSinceLastPiston == 3 && client != null && client.player != null && client.player.getWorld() != null && settings.cutoffPistons) {
-            soundEvents.forEach(e -> {
-                if (e.ticksSince >= 3) e.playSound(client.player.getWorld(), client.player);
-            });
+            if (settings.cutoffSmoothLastPiston) {
+                soundEvents.forEach(e -> {
+                    if (e.ticksSince >= 3) {
+                        e.playSound(client.player.getWorld(), client.player);
+                    }
+                });
+            }
 
             timeSinceOverloadedTick.clear();
             soundEvents.clear();
@@ -94,7 +99,7 @@ public class PistonCutoffManager {
 
         public void playSound(World w, PlayerEntity player) {
             w.playSound(player, this.pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.45F,
-                0.635F + w.random.nextFloat() * 0.20F);
+                0.535F + w.random.nextFloat() * 0.20F);
         }
 
     }

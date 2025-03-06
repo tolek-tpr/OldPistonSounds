@@ -24,6 +24,7 @@ public class FileLoader {
 
             OldPistonSettings.getInstance().cutoffPistons = loaded.settings.cutoffPistons;
             OldPistonSettings.getInstance().modifyPistonPitch = loaded.settings.modifyPistonPitch;
+            OldPistonSettings.getInstance().cutoffSmoothLastPiston = loaded.settings.cutoffSmoothLastPiston;
         } catch (IOException e) {
             OldPistonSounds.LOGGER.warn("Old Pistons save file not found!");
         } catch (JsonIOException e) {

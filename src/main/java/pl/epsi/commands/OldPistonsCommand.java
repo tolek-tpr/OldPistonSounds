@@ -26,9 +26,24 @@ public class OldPistonsCommand implements ClientModInitializer {
                             .then(argument("On/Off", BoolArgumentType.bool())
                                     .executes(ctx -> changePistonPitchCommand(ctx, true)))
                             .executes(ctx -> changePistonPitchCommand(ctx, false)))
+                    .then(literal("cutoffSmoothLastPiston")
+                            .then(argument("On/Off", BoolArgumentType.bool())
+                                    .executes(ctx -> cutoffSmoothLastPistonCommand(ctx, true)))
+                            .executes(ctx -> cutoffSmoothLastPistonCommand(ctx, false)))
             );
 
         });
+    }
+
+    public int cutoffSmoothLastPistonCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
+        if (bl) {
+            settings.cutoffSmoothLastPiston = BoolArgumentType.getBool(ctx, "On/Off");
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffSmoothLastPistonCommand.set", settings.cutoffSmoothLastPiston));
+        } else {
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffSmoothLastPistonCommand.get", settings.cutoffSmoothLastPiston));
+        }
+
+        return 1;
     }
 
     public int cutoffPistonsCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {

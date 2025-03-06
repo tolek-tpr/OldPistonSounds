@@ -3,5 +3,8 @@
   "oldpistons.cutoffPistonsCommand.get": "Cutoff Pistons is set to %s",
 
   "oldpistons.changePistonPitchCommand.set": "Set Change Piston Pitch to %s",
-  "oldpistons.changePistonPitchCommand.get": "Change Piston Pitch is set to %s"
+  "oldpistons.changePistonPitchCommand.get": "Change Piston Pitch is set to %s",
+
+  "oldpistons.cutoffSmoothLastPistonCommand.set": "Set Smooth Last Piston On Cutoff to %s",
+  "oldpistons.cutoffSmoothLastPistonCommand.get": "Smooth Last Piston On Cutoff is set to %s"
 }
