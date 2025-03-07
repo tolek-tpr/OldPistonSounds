@@ -14,5 +14,7 @@ public class OldPistonSettings {
     public boolean cutoffPistons = true;
     public boolean modifyPistonPitch = true;
     public boolean cutoffSmoothLastPiston = true;
+    public int pistonSoundThreshold = 16;
+    public int cutoffTime = 2;
 
 }

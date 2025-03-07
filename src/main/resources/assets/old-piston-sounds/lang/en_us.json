@@ -6,5 +6,11 @@
   "oldpistons.changePistonPitchCommand.get": "Change Piston Pitch is set to %s",
 
   "oldpistons.cutoffSmoothLastPistonCommand.set": "Set Smooth Last Piston On Cutoff to %s",
-  "oldpistons.cutoffSmoothLastPistonCommand.get": "Smooth Last Piston On Cutoff is set to %s"
+  "oldpistons.cutoffSmoothLastPistonCommand.get": "Smooth Last Piston On Cutoff is set to %s",
+
+  "oldpistons.pistonSoundThresholdCommand.set": "Set Piston Sound Threshold to %s",
+  "oldpistons.pistonSoundThresholdCommand.get": "Piston Sound Threshold is set to %s",
+
+  "oldpistons.cutoffTimeCommand.set": "Set Cutoff Time to %s",
+  "oldpistons.cutoffTimeCommand.get": "Cutoff Time is set to %s"
 }

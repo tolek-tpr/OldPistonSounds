@@ -1,6 +1,7 @@
 package pl.epsi.commands;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -30,9 +31,39 @@ public class OldPistonsCommand implements ClientModInitializer {
                             .then(argument("On/Off", BoolArgumentType.bool())
                                     .executes(ctx -> cutoffSmoothLastPistonCommand(ctx, true)))
                             .executes(ctx -> cutoffSmoothLastPistonCommand(ctx, false)))
+                    .then(literal("pistonSoundThreshold")
+                            .then(argument("Value", IntegerArgumentType.integer())
+                                    .executes(ctx -> pistonSoundThreshold(ctx, true)))
+                            .executes(ctx -> pistonSoundThreshold(ctx, false)))
+                    .then(literal("cutoffTime")
+                            .then(argument("Value", IntegerArgumentType.integer())
+                                    .executes(ctx -> cutoffTime(ctx, true)))
+                            .executes(ctx -> cutoffTime(ctx, false)))
             );
 
         });
+    }
+
+    public int pistonSoundThreshold(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
+        if (bl) {
+            settings.pistonSoundThreshold = IntegerArgumentType.getInteger(ctx, "Value");
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.pistonSoundThresholdCommand.set", settings.pistonSoundThreshold));
+        } else {
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.pistonSoundThresholdCommand.get", settings.pistonSoundThreshold));
+        }
+
+        return 1;
+    }
+
+    public int cutoffTime(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
+        if (bl) {
+            settings.cutoffTime = IntegerArgumentType.getInteger(ctx, "Value");
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffTimeCommand.set", settings.cutoffTime));
+        } else {
+            ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffTimeCommand.get", settings.cutoffTime));
+        }
+
+        return 1;
     }
 
     public int cutoffSmoothLastPistonCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {

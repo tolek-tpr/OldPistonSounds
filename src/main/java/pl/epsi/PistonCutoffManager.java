@@ -23,8 +23,6 @@ public class PistonCutoffManager {
         return instance;
     }
 
-    private final int PISTON_SOUND_THRESHOLD = 32;
-    private final int CUTOFF_TIME = 2; // GameTicks
     private final OldPistonSettings settings = OldPistonSettings.getInstance();
     private final ArrayList<Integer> timeSinceOverloadedTick = new ArrayList<>();
     private final ArrayList<PistonSoundEvent> soundEvents = new ArrayList<>();
@@ -40,8 +38,10 @@ public class PistonCutoffManager {
 
     public void tick() {
         if (client == null) client = MinecraftClient.getInstance();
+        int pistonSoundThreshold = settings.pistonSoundThreshold * 2;
+        int cutoffTime = settings.cutoffTime;
 
-        if (pistonsFiredInGameTick > PISTON_SOUND_THRESHOLD) {
+        if (pistonsFiredInGameTick > pistonSoundThreshold) {
             timeSinceOverloadedTick.add(0);
         } else {
             tempAddedInTick.forEach(soundEvents::remove);
@@ -63,7 +63,7 @@ public class PistonCutoffManager {
         for (int i = 0; i < timeSinceOverloadedTick.size(); i++) {
             int tick = timeSinceOverloadedTick.get(i);
 
-            if (tick >= CUTOFF_TIME && client != null && settings.cutoffPistons && ticksSinceLastPiston != 3) {
+            if (tick >= cutoffTime && client != null && settings.cutoffPistons && ticksSinceLastPiston != 3) {
                 client.getSoundManager().stopSounds(Identifier.of("block.piston.extend"), SoundCategory.BLOCKS);
                 client.getSoundManager().stopSounds(Identifier.of("block.piston.contract"), SoundCategory.BLOCKS);
                 timeSinceOverloadedTick.remove(i);
