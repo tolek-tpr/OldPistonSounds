@@ -76,7 +76,12 @@ public class PistonCutoffManager {
 
         pistonsFiredInGameTick = 0;
         ticksSinceLastPiston++;
-        soundEvents.forEach(PistonSoundEvent::increment);
+        for (int i = 0; i < soundEvents.size(); i ++) {
+            var soundEvent = soundEvents.get(i);
+            soundEvents.remove(i);
+            soundEvent.increment();
+            soundEvents.add(i, soundEvent);
+        }
         tempAddedInTick.clear();
     }
 
