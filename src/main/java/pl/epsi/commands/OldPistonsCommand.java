@@ -39,14 +39,24 @@ public class OldPistonsCommand implements ClientModInitializer {
                             .then(argument("Value", IntegerArgumentType.integer())
                                     .executes(ctx -> cutoffTime(ctx, true)))
                             .executes(ctx -> cutoffTime(ctx, false)))
+                    .then(literal("default")
+                            .executes(this::setToDefault))
             );
 
         });
     }
 
+    public int setToDefault(CommandContext<FabricClientCommandSource> ctx) {
+        settings.setToDefault();
+        ctx.getSource().sendFeedback(Text.translatable("oldpistons.defaultCommand.default"));
+
+        return 1;
+    }
+
     public int pistonSoundThreshold(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
         if (bl) {
             settings.pistonSoundThreshold = IntegerArgumentType.getInteger(ctx, "Value");
+            settings.setCustomProfile();
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.pistonSoundThresholdCommand.set", settings.pistonSoundThreshold));
         } else {
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.pistonSoundThresholdCommand.get", settings.pistonSoundThreshold));
@@ -58,6 +68,7 @@ public class OldPistonsCommand implements ClientModInitializer {
     public int cutoffTime(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
         if (bl) {
             settings.cutoffTime = IntegerArgumentType.getInteger(ctx, "Value");
+            settings.setCustomProfile();
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffTimeCommand.set", settings.cutoffTime));
         } else {
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffTimeCommand.get", settings.cutoffTime));
@@ -69,6 +80,7 @@ public class OldPistonsCommand implements ClientModInitializer {
     public int cutoffSmoothLastPistonCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
         if (bl) {
             settings.cutoffSmoothLastPiston = BoolArgumentType.getBool(ctx, "On/Off");
+            settings.setCustomProfile();
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffSmoothLastPistonCommand.set", settings.cutoffSmoothLastPiston));
         } else {
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffSmoothLastPistonCommand.get", settings.cutoffSmoothLastPiston));
@@ -80,6 +92,7 @@ public class OldPistonsCommand implements ClientModInitializer {
     public int cutoffPistonsCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
         if (bl) {
             settings.cutoffPistons = BoolArgumentType.getBool(ctx, "On/Off");
+            settings.setCustomProfile();
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffPistonsCommand.set", settings.cutoffPistons));
         } else {
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.cutoffPistonsCommand.get", settings.cutoffPistons));
@@ -91,6 +104,7 @@ public class OldPistonsCommand implements ClientModInitializer {
     public int changePistonPitchCommand(CommandContext<FabricClientCommandSource> ctx, boolean bl) {
         if (bl) {
             settings.modifyPistonPitch = BoolArgumentType.getBool(ctx, "On/Off");
+            settings.setCustomProfile();
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.changePistonPitchCommand.set", settings.modifyPistonPitch));
         } else {
             ctx.getSource().sendFeedback(Text.translatable("oldpistons.changePistonPitchCommand.get", settings.modifyPistonPitch));

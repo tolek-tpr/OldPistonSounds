@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.block.PistonBlock;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.sound.SoundInstance;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -16,6 +17,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import pl.epsi.PistonUtils;
+import pl.epsi.SoundUtils;
 import pl.epsi.settings.OldPistonSettings;
 import pl.epsi.OldPistonSounds;
 import pl.epsi.PistonCutoffManager;
@@ -44,7 +46,9 @@ public class PistonBlockMixin {
 		manager.resetTicksSinceLastPiston();
 
 		if (settings.modifyPistonPitch) {
-			PistonUtils.playOldPistonSound(instance, pos, SoundEvents.BLOCK_PISTON_EXTEND);
+			SoundInstance soundInstance = SoundUtils.getInstance().playSound(pos, SoundEvents.BLOCK_PISTON_EXTEND, SoundCategory.BLOCKS, 0.75F,
+					0.535F + instance.random.nextFloat() * 0.20F);
+			manager.addPistonSoundEvent(new PistonCutoffManager.PistonSoundEvent(pos, soundInstance));
 		} else {
 			original.call(instance, source, pos, sound, category, volume, pitch);
 		}
@@ -65,10 +69,11 @@ public class PistonBlockMixin {
 
 		manager.increasePistonsFired();
 		manager.resetTicksSinceLastPiston();
-		manager.addPistonSoundEvent(new PistonCutoffManager.PistonSoundEvent(pos));
 
 		if (settings.modifyPistonPitch) {
-			PistonUtils.playOldPistonSound(instance, pos, SoundEvents.BLOCK_PISTON_CONTRACT);
+			SoundInstance soundInstance = SoundUtils.getInstance().playSound(pos, SoundEvents.BLOCK_PISTON_CONTRACT, SoundCategory.BLOCKS, 0.75F,
+					0.535F + instance.random.nextFloat() * 0.20F);
+			manager.addPistonSoundEvent(new PistonCutoffManager.PistonSoundEvent(pos, soundInstance));
 		} else {
 			original.call(instance, source, pos, sound, category, volume, pitch);
 		}

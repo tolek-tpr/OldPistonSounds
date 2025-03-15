@@ -28,6 +28,9 @@ public class FileLoader {
             settings.cutoffSmoothLastPiston = loaded.settings.cutoffSmoothLastPiston;
             settings.pistonSoundThreshold = loaded.settings.pistonSoundThreshold;
             settings.cutoffTime = loaded.settings.cutoffTime;
+            settings.profile = loaded.settings.profile;
+
+            if (settings.profile.equalsIgnoreCase("default")) settings.setToDefault();
         } catch (IOException e) {
             OldPistonSounds.LOGGER.warn("Old Pistons save file not found!");
         } catch (JsonIOException e) {

@@ -12,5 +12,7 @@
   "oldpistons.pistonSoundThresholdCommand.get": "Piston Sound Threshold is set to %s",
 
   "oldpistons.cutoffTimeCommand.set": "Set Cutoff Time to %s",
-  "oldpistons.cutoffTimeCommand.get": "Cutoff Time is set to %s"
+  "oldpistons.cutoffTimeCommand.get": "Cutoff Time is set to %s",
+
+  "oldpistons.defaultCommand.default": "Reset all settings to default!"
 }
