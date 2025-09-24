@@ -31,11 +31,10 @@ public class PistonBlockMixin {
 	private final OldPistonSettings settings = OldPistonSettings.getInstance();
 
 	@WrapOperation(method = "onSyncedBlockEvent", at = @At(
-			value = "INVOKE", target = "net/minecraft/world/World.playSound (Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
+			value = "INVOKE", target = "net/minecraft/world/World.playSound (Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
 			ordinal = 0
 	))
-	private void overwriteExtensionSound(World instance, PlayerEntity source, BlockPos pos, SoundEvent sound, SoundCategory category,
-									   float volume, float pitch, Operation<Void> original) {
+	private void overwriteExtensionSound(World instance, Entity source, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch, Operation<Void> original) {
 		if (manager == null) {
 			OldPistonSounds.LOGGER.warn("Old Piston Sound Manager is null!");
 			manager = PistonCutoffManager.getInstance();
@@ -55,11 +54,10 @@ public class PistonBlockMixin {
     }
 
 	@WrapOperation(method = "onSyncedBlockEvent", at = @At(
-			value = "INVOKE", target = "net/minecraft/world/World.playSound (Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
+			value = "INVOKE", target = "net/minecraft/world/World.playSound (Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/BlockPos;Lnet/minecraft/sound/SoundEvent;Lnet/minecraft/sound/SoundCategory;FF)V",
 			ordinal = 1
 	))
-	private void overwriteRetractionSound(World instance, PlayerEntity source, BlockPos pos, SoundEvent sound, SoundCategory category,
-									   float volume, float pitch, Operation<Void> original) {
+	private void overwriteRetractionSound(World instance, Entity source, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch, Operation<Void> original) {
 		if (manager == null) {
 			OldPistonSounds.LOGGER.warn("Old Piston Sound Manager is null!");
 			manager = PistonCutoffManager.getInstance();

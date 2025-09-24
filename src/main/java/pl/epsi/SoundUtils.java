@@ -20,7 +20,6 @@ public class SoundUtils {
     }
 
     private MinecraftClient client = MinecraftClient.getInstance();
-    //public final Random random = Random.create();
 
     public SoundInstance playSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed) {
         if (client == null) client = MinecraftClient.getInstance();
