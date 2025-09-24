@@ -44,11 +44,14 @@ public class PistonCutoffManager {
             overloadedTicks.addAll(tempSoundEvents);
         }
 
-        for (var pistonEvent : overloadedTicks) {
+        for (int i = 0; i < overloadedTicks.size(); i++) {
+            var pistonEvent = overloadedTicks.get(i);
             if (pistonEvent == null) continue;
+
             if (pistonEvent.ticksSince >= cutoffTime && ticksSinceLastPiston < 3 && settings.cutoffPistons) {
                 pistonEvent.cancelSound();
             }
+
             if (ticksSinceLastPiston == 3 && client != null && client.player != null && client.player.getWorld() != null && settings.cutoffPistons) {
                 if (settings.cutoffSmoothLastPiston) {
                     pistonEvent.playSound(client.player.getWorld(), client.player);
@@ -58,10 +61,14 @@ public class PistonCutoffManager {
             }
         }
 
-        tempRemove.forEach(overloadedTicks::remove);
+        for (int i = 0; i < tempRemove.size(); i++) {
+            overloadedTicks.remove(tempRemove.get(i));
+        }
 
         overloadedTicks.forEach(PistonSoundEvent::increment);
+        
         tempSoundEvents.clear();
+        tempRemove.clear();
         this.pistonsFiredInGameTick = 0;
         this.ticksSinceLastPiston++;
     }
