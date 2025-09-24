@@ -20,7 +20,7 @@ public class SoundUtils {
     }
 
     private MinecraftClient client = MinecraftClient.getInstance();
-    public final Random random = Random.create();
+    //public final Random random = Random.create();
 
     public SoundInstance playSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed) {
         if (client == null) client = MinecraftClient.getInstance();
@@ -38,7 +38,7 @@ public class SoundUtils {
     }
 
     public SoundInstance playSound(double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean useDistance) {
-        return this.playSound(x, y, z, sound, category, volume, pitch, useDistance, this.random.nextLong());
+        return this.playSound(x, y, z, sound, category, volume, pitch, useDistance, 10);
     }
 
     public SoundInstance playSound(BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch) {

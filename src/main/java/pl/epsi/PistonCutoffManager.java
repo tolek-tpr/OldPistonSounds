@@ -45,6 +45,7 @@ public class PistonCutoffManager {
         }
 
         for (var pistonEvent : overloadedTicks) {
+            if (pistonEvent == null) continue;
             if (pistonEvent.ticksSince >= cutoffTime && ticksSinceLastPiston < 3 && settings.cutoffPistons) {
                 pistonEvent.cancelSound();
             }
