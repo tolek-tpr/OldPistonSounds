@@ -66,7 +66,7 @@ public class PistonCutoffManager {
         }
 
         overloadedTicks.forEach(PistonSoundEvent::increment);
-        
+
         tempSoundEvents.clear();
         tempRemove.clear();
         this.pistonsFiredInGameTick = 0;
