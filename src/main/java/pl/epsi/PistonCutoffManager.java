@@ -65,7 +65,9 @@ public class PistonCutoffManager {
             overloadedTicks.remove(tempRemove.get(i));
         }
 
-        overloadedTicks.forEach(PistonSoundEvent::increment);
+        overloadedTicks.forEach((a) -> {
+            if (a != null) a.increment();
+        });
 
         tempSoundEvents.clear();
         tempRemove.clear();
