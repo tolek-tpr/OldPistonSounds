@@ -3,7 +3,7 @@
 	"package": "pl.epsi.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"PistonBlockMixin"
+      "PistonBlockMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

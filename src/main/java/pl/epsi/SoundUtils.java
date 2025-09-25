@@ -8,6 +8,8 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
 
+import java.util.ArrayList;
+
 public class SoundUtils {
 
     private static SoundUtils instance;
@@ -22,27 +24,45 @@ public class SoundUtils {
     private MinecraftClient client = MinecraftClient.getInstance();
     //public final Random random = Random.create();
 
-    public SoundInstance playSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed) {
-        if (client == null) client = MinecraftClient.getInstance();
-        if (client == null) return null;
-        double d = this.client.gameRenderer.getCamera().getPos().squaredDistanceTo(x, y, z);
-        PositionedSoundInstance positionedSoundInstance = new PositionedSoundInstance(event, category, volume, pitch, Random.create(seed), x, y, z);
-        if (useDistance && d > 100.0) {
-            double e = Math.sqrt(d) / 40.0;
-            this.client.getSoundManager().play(positionedSoundInstance, (int)(e * 20.0));
-        } else {
-            this.client.getSoundManager().play(positionedSoundInstance);
+    private final ArrayList<WrappedSound> scheduledSounds = new ArrayList<>();
+
+    public void tick() {
+        for (int i = 0; i < scheduledSounds.size(); i++) {
+            this.play(scheduledSounds.get(i));
         }
+
+        scheduledSounds.clear();
+    }
+
+    private void play(WrappedSound ws) {
+        if (client == null) client = MinecraftClient.getInstance();
+        if (client == null) return;
+
+        double d = this.client.gameRenderer.getCamera().getPos().squaredDistanceTo(ws.sound.getX(), ws.sound.getY(), ws.sound.getZ());
+        if (ws.distance && d > 100.0) {
+            double e = Math.sqrt(d) / 40.0;
+            this.client.getSoundManager().play(ws.sound, (int)(e * 20.0));
+        } else {
+            this.client.getSoundManager().play(ws.sound);
+        }
+    }
+
+    public SoundInstance scheduleSound(double x, double y, double z, SoundEvent event, SoundCategory category, float volume, float pitch, boolean useDistance, long seed) {
+        PositionedSoundInstance positionedSoundInstance = new PositionedSoundInstance(event, category, volume, pitch, Random.create(seed), x, y, z);
+
+        this.scheduledSounds.add(new WrappedSound(positionedSoundInstance, useDistance));
 
         return positionedSoundInstance;
     }
 
-    public SoundInstance playSound(double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean useDistance) {
-        return this.playSound(x, y, z, sound, category, volume, pitch, useDistance, 10);
+    public SoundInstance scheduleSound(double x, double y, double z, SoundEvent sound, SoundCategory category, float volume, float pitch, boolean useDistance) {
+        return this.scheduleSound(x, y, z, sound, category, volume, pitch, useDistance, 10);
     }
 
-    public SoundInstance playSound(BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch) {
-        return this.playSound(pos.getX(), pos.getY(), pos.getZ(), sound, category, volume, pitch, false);
+    public SoundInstance scheduleSound(BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch) {
+        return this.scheduleSound(pos.getX(), pos.getY(), pos.getZ(), sound, category, volume, pitch, false);
     }
+
+    record WrappedSound(SoundInstance sound, boolean distance) {}
 
 }
